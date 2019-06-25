@@ -7,7 +7,7 @@ from collections import Counter
 import numpy as np
 import random
 
-def ngram_dataset_freq(dataset, key, n=1, verbose=False):
+def ngram_dataset_freq(dataset, key, n=1, verbose=False, top_n=50):
     """Frequency distribution of ngrams across the entire dataset."""
     fdist = Counter()
     num_descriptions = 0
@@ -48,8 +48,10 @@ def ngram_dataset_freq(dataset, key, n=1, verbose=False):
             diversity.append(float(len(fdist_in_task)) / np.sum(list(fdist_in_task.values())))
                 
     if verbose:
-        common_ngrams = [(word, num) for (word, num) in fdist.most_common(100) if (len(word) > 1 or len(word[0]) > 1 )][:50]
-        
+        if top_n:
+            common_ngrams = [(word, num) for (word, num) in fdist.most_common(100) if (len(word) > 1 or len(word[0]) > 1 )][:top_n]
+        else:
+            common_ngrams = [(word, num) for (word, num) in fdist.most_common() if (len(word) > 1 or len(word[0]) > 1 )]
         
         print("Printing for ngram, n=%d" % n)
         print("Num descriptions: %d" % num_descriptions)
